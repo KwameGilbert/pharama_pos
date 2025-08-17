@@ -1,0 +1,3 @@
+name,category,supplier_id,batch_no,expiry_date,cost_price,selling_price,stock_qty,reorder_level
+Example Medicine 1,Antibiotics,1,BATCH001,2026-12-31,10.50,15.75,100,10
+Example Medicine 2,Pain Relief,2,BATCH002,2025-06-30,5.25,8.99,50,5
