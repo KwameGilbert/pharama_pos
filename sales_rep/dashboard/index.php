@@ -1,6 +1,6 @@
 <?php
 // Include header
-include_once '../include/head.php';
+include_once __DIR__ .'/../include/head.php';
 
 // Get today's date in Y-m-d format
 $today = date('Y-m-d');
