@@ -3,7 +3,7 @@
 $page_title = "Settings";
 
 // Include header
-include_once 'includes/header.php';
+include_once __DIR__ .'/../includes/header.php';
 
 // Get the active tab from query parameter (default to profile)
 $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'profile';
@@ -418,5 +418,5 @@ $pharmacy = mysqli_fetch_assoc($pharmacy_result);
 
 <?php
 // Include footer
-include_once 'includes/footer.php';
+include_once __DIR__ .'/../includes/footer.php';
 ?>

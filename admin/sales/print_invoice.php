@@ -11,16 +11,17 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 $invoice_id = $_GET['id'];
 
 // Get invoice details
+
 $query = "SELECT i.*, 
-          u.username, u.full_name as sales_rep_name,
+          u.name as sales_rep_name,
           c.name as customer_name, c.phone as customer_phone, c.email as customer_email,
           p.name as pharmacy_name, p.address as pharmacy_address, p.phone as pharmacy_phone, 
-          p.email as pharmacy_email, p.registration_no as pharmacy_reg
+          p.email as pharmacy_email, p.logo
           FROM invoices i 
-          LEFT JOIN users u ON i.user_id = u.id
-          LEFT JOIN customers c ON i.customer_id = c.id
-          LEFT JOIN pharmacy p ON p.id = 1
-          WHERE i.id = ?";
+          LEFT JOIN users u ON i.user_id = u.user_id
+          LEFT JOIN customers c ON i.customer_id = c.customer_id
+          LEFT JOIN pharmacy p ON p.pharmacy_id = 1
+          WHERE i.invoice_id = ?";
 
 $stmt = $conn->prepare($query);
 $stmt->bind_param("i", $invoice_id);
@@ -35,9 +36,9 @@ if ($result->num_rows === 0) {
 $invoice = $result->fetch_assoc();
 
 // Get invoice items
-$items_query = "SELECT ii.*, p.name, p.code
+$items_query = "SELECT ii.*, p.name, p.batch_no as code
                 FROM invoice_items ii
-                JOIN products p ON ii.product_id = p.id
+                JOIN products p ON ii.product_id = p.product_id
                 WHERE ii.invoice_id = ?";
 $items_stmt = $conn->prepare($items_query);
 $items_stmt->bind_param("i", $invoice_id);
@@ -47,14 +48,15 @@ $items_result = $items_stmt->get_result();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoice #<?php echo $invoice['invoice_number']; ?></title>
-    
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -62,34 +64,43 @@ $items_result = $items_stmt->get_result();
             margin: 0;
             padding: 0;
         }
+
         .invoice-container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
         }
+
         .invoice-header {
             border-bottom: 2px solid #ddd;
             padding-bottom: 20px;
             margin-bottom: 20px;
         }
+
         .invoice-title {
             font-size: 24px;
             font-weight: bold;
             margin: 0;
             color: #333;
         }
+
         .invoice-details {
             margin-bottom: 30px;
         }
-        .customer-details, .invoice-summary {
+
+        .customer-details,
+        .invoice-summary {
             margin-bottom: 20px;
         }
+
         .table-items th {
             background-color: #f8f9fa;
         }
+
         .total-row {
             font-weight: bold;
         }
+
         .invoice-footer {
             margin-top: 50px;
             border-top: 1px solid #ddd;
@@ -98,11 +109,13 @@ $items_result = $items_stmt->get_result();
             color: #777;
             text-align: center;
         }
+
         .print-button {
             position: fixed;
             bottom: 20px;
             right: 20px;
         }
+
         .status-cancelled {
             position: absolute;
             top: 50%;
@@ -124,10 +137,12 @@ $items_result = $items_stmt->get_result();
             width: 80%;
             text-align: center;
         }
+
         @media print {
             .print-button {
                 display: none !important;
             }
+
             .invoice-container {
                 width: 100%;
                 max-width: none;
@@ -137,9 +152,10 @@ $items_result = $items_stmt->get_result();
         }
     </style>
 </head>
+
 <body>
     <?php if ($invoice['status'] == 'cancelled'): ?>
-    <div class="status-cancelled">Cancelled</div>
+        <div class="status-cancelled">Cancelled</div>
     <?php endif; ?>
 
     <div class="invoice-container position-relative">
@@ -151,7 +167,7 @@ $items_result = $items_stmt->get_result();
                     <p class="mb-0">Phone: <?php echo htmlspecialchars($invoice['pharmacy_phone']); ?></p>
                     <p class="mb-0">Email: <?php echo htmlspecialchars($invoice['pharmacy_email']); ?></p>
                     <?php if (!empty($invoice['pharmacy_reg'])): ?>
-                    <p class="mb-0">Reg No: <?php echo htmlspecialchars($invoice['pharmacy_reg']); ?></p>
+                        <p class="mb-0">Reg No: <?php echo htmlspecialchars($invoice['pharmacy_reg']); ?></p>
                     <?php endif; ?>
                 </div>
                 <div class="col-md-6 text-md-end">
@@ -160,27 +176,27 @@ $items_result = $items_stmt->get_result();
                     <p class="mb-0"><strong>Date:</strong> <?php echo date('F d, Y', strtotime($invoice['invoice_date'])); ?></p>
                     <p class="mb-0"><strong>Time:</strong> <?php echo date('h:i A', strtotime($invoice['created_at'])); ?></p>
                     <?php if ($invoice['status'] == 'cancelled'): ?>
-                    <p class="mb-0 text-danger"><strong>CANCELLED</strong></p>
-                    <p class="mb-0 text-danger"><small>on <?php echo date('M d, Y h:i A', strtotime($invoice['updated_at'])); ?></small></p>
+                        <p class="mb-0 text-danger"><strong>CANCELLED</strong></p>
+                        <p class="mb-0 text-danger"><small>on <?php echo date('M d, Y h:i A', strtotime($invoice['updated_at'])); ?></small></p>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
-        
+
         <div class="invoice-details">
             <div class="row">
                 <div class="col-md-6 customer-details">
                     <h5>Bill To:</h5>
                     <p class="mb-0">
-                        <?php echo !empty($invoice['customer_name']) ? 
-                            htmlspecialchars($invoice['customer_name']) : 
+                        <?php echo !empty($invoice['customer_name']) ?
+                            htmlspecialchars($invoice['customer_name']) :
                             'Walk-in customer'; ?>
                     </p>
                     <?php if (!empty($invoice['customer_phone'])): ?>
-                    <p class="mb-0">Phone: <?php echo htmlspecialchars($invoice['customer_phone']); ?></p>
+                        <p class="mb-0">Phone: <?php echo htmlspecialchars($invoice['customer_phone']); ?></p>
                     <?php endif; ?>
                     <?php if (!empty($invoice['customer_email'])): ?>
-                    <p class="mb-0">Email: <?php echo htmlspecialchars($invoice['customer_email']); ?></p>
+                        <p class="mb-0">Email: <?php echo htmlspecialchars($invoice['customer_email']); ?></p>
                     <?php endif; ?>
                 </div>
                 <div class="col-md-6 text-md-end invoice-summary">
@@ -189,7 +205,7 @@ $items_result = $items_stmt->get_result();
                 </div>
             </div>
         </div>
-        
+
         <div class="table-responsive">
             <table class="table table-bordered table-items">
                 <thead>
@@ -203,14 +219,14 @@ $items_result = $items_stmt->get_result();
                     </tr>
                 </thead>
                 <tbody>
-                    <?php 
+                    <?php
                     $counter = 1;
                     $subtotal = 0;
-                    
+
                     while ($item = $items_result->fetch_assoc()) {
                         $itemTotal = $item['unit_price'] * $item['quantity'] - $item['discount'];
                         $subtotal += $itemTotal;
-                        ?>
+                    ?>
                         <tr>
                             <td><?php echo $counter++; ?></td>
                             <td>
@@ -222,7 +238,7 @@ $items_result = $items_stmt->get_result();
                             <td class="text-end"><?php echo number_format($item['discount'], 2); ?></td>
                             <td class="text-end"><?php echo number_format($itemTotal, 2); ?></td>
                         </tr>
-                        <?php
+                    <?php
                     }
                     ?>
                 </tbody>
@@ -248,46 +264,46 @@ $items_result = $items_stmt->get_result();
                         <td class="text-end"><?php echo number_format($invoice['total_amount'], 2); ?></td>
                     </tr>
                     <?php if ($invoice['payment_method'] == 'cash'): ?>
-                    <tr>
-                        <td colspan="4"></td>
-                        <th class="text-end">Amount Paid</th>
-                        <td class="text-end"><?php echo number_format($invoice['amount_paid'], 2); ?></td>
-                    </tr>
-                    <tr>
-                        <td colspan="4"></td>
-                        <th class="text-end">Change</th>
-                        <td class="text-end"><?php echo number_format($invoice['amount_paid'] - $invoice['total_amount'], 2); ?></td>
-                    </tr>
+                        <tr>
+                            <td colspan="4"></td>
+                            <th class="text-end">Amount Paid</th>
+                            <td class="text-end"><?php echo number_format($invoice['amount_paid'], 2); ?></td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"></td>
+                            <th class="text-end">Change</th>
+                            <td class="text-end"><?php echo number_format($invoice['amount_paid'] - $invoice['total_amount'], 2); ?></td>
+                        </tr>
                     <?php endif; ?>
                 </tfoot>
             </table>
         </div>
-        
+
         <?php if (!empty($invoice['notes'])): ?>
-        <div class="mt-4">
-            <h6>Notes:</h6>
-            <p><?php echo nl2br(htmlspecialchars($invoice['notes'])); ?></p>
-        </div>
+            <div class="mt-4">
+                <h6>Notes:</h6>
+                <p><?php echo nl2br(htmlspecialchars($invoice['notes'])); ?></p>
+            </div>
         <?php endif; ?>
-        
+
         <?php if ($invoice['status'] == 'cancelled' && !empty($invoice['cancel_reason'])): ?>
-        <div class="mt-4 alert alert-danger">
-            <h6>Cancellation Reason:</h6>
-            <p><?php echo nl2br(htmlspecialchars($invoice['cancel_reason'])); ?></p>
-        </div>
+            <div class="mt-4 alert alert-danger">
+                <h6>Cancellation Reason:</h6>
+                <p><?php echo nl2br(htmlspecialchars($invoice['cancel_reason'])); ?></p>
+            </div>
         <?php endif; ?>
-        
+
         <div class="invoice-footer">
             <p>Thank you for your business!</p>
             <p>This invoice was generated by Pharmacy POS System.</p>
             <p>Printed on: <?php echo date('F d, Y h:i A'); ?></p>
         </div>
     </div>
-    
+
     <button class="btn btn-primary print-button" onclick="window.print();">
         Print Invoice
     </button>
-    
+
     <script>
         // Auto print when page loads
         window.onload = function() {
@@ -298,4 +314,5 @@ $items_result = $items_stmt->get_result();
         };
     </script>
 </body>
+
 </html>

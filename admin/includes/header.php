@@ -193,7 +193,7 @@ $pharmacy = mysqli_fetch_assoc($pharmacy_result);
 <body>
     <div class="d-flex">
         <!-- Sidebar -->
-        <?php include_once 'sidebar.php'; ?>
+        <?php include_once __DIR__ . '/sidebar.php'; ?>
 
         <!-- Main content -->
         <div class="content-wrapper">
@@ -251,7 +251,7 @@ $pharmacy = mysqli_fetch_assoc($pharmacy_result);
 
                             if ($alerts_count > 10) {
                                 echo '<li><hr class="dropdown-divider"></li>';
-                                echo '<li><a class="dropdown-item text-center" href="../reports.php?type=alerts">View all alerts</a></li>';
+                                echo '<li><a class="dropdown-item text-center" href="../reports/reports.php?type=alerts">View all alerts</a></li>';
                             } elseif ($alerts_count == 0) {
                                 echo '<li><a class="dropdown-item text-center" href="#">No alerts</a></li>';
                             }
@@ -264,8 +264,8 @@ $pharmacy = mysqli_fetch_assoc($pharmacy_result);
                             <span><?php echo htmlspecialchars($user['name']); ?></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
-                            <li><a class="dropdown-item" href="../settings.php?tab=profile"><i class="fas fa-user-cog me-2"></i> Profile Settings</a></li>
-                            <li><a class="dropdown-item" href="../settings.php?tab=pharmacy"><i class="fas fa-store me-2"></i> Pharmacy Settings</a></li>
+                            <li><a class="dropdown-item" href="../settings/settings.php?tab=profile"><i class="fas fa-user-cog me-2"></i> Profile Settings</a></li>
+                            <li><a class="dropdown-item" href="../settings/settings.php?tab=pharmacy"><i class="fas fa-store me-2"></i> Pharmacy Settings</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>

@@ -50,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             $_SESSION["username"] = $username; // Using the input username (email)
                             $_SESSION["full_name"] = $name;
                             $_SESSION["role"] = "admin";                            // Redirect user to dashboard
-                            header("location: ../dashboard.php");
+                            header("location: ../dashboard/dashboard.php");
                         } else {
                             // Password is not valid
                             $error = "Invalid username or password";
