@@ -6,7 +6,7 @@ ob_start();
 $page_title = "Add New Product";
 
 // Include header
-include_once '../includes/header.php';
+include_once '../includes/head.php';
 
 // Get suppliers for dropdown
 $supplier_query = "SELECT supplier_id, name FROM suppliers ORDER BY name";

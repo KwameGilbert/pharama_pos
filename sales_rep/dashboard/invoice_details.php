@@ -1,6 +1,6 @@
 <?php
 // Include header
-include_once '../include/header.php';
+include_once '../include/head.php';
 
 // Check if invoice ID is provided
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {

@@ -3,7 +3,7 @@
 $page_title = "Invoice Details";
 
 // Include header
-include_once '../includes/header.php';
+include_once '../includes/head.php';
 
 // Check if invoice ID is provided
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {

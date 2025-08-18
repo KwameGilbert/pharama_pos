@@ -3,7 +3,7 @@
 $page_title = "Sales Management";
 
 // Include header
-include_once '../includes/header.php';
+include_once '../includes/head.php';
 
 // Define default values for filters
 $startDate = isset($_GET['start_date']) ? $_GET['start_date'] : date('Y-m-d', strtotime('-30 days'));

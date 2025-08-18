@@ -6,7 +6,7 @@ $page_title = "Reports & Analytics";
 ob_start();
 
 // Include header
-include_once '../includes/header.php';
+include_once '../includes/head.php';
 
 // Get report type from query parameter
 $report_type = isset($_GET['type']) ? $_GET['type'] : 'sales';

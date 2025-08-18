@@ -6,7 +6,7 @@ ob_start();
 $page_title = "Edit Supplier";
 
 // Include header
-include_once '../includes/header.php';
+include_once '../includes/head.php';
 
 // Check if ID is provided
 if (!isset($_GET['id']) || empty($_GET['id'])) {

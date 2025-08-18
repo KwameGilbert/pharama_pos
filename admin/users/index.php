@@ -3,7 +3,7 @@
 $page_title = "User Management";
 
 // Include header
-include_once '../includes/header.php';
+include_once '../includes/head.php';
 
 // Check if we have a success or error message
 $success_message = isset($_GET['success']) ? $_GET['success'] : '';

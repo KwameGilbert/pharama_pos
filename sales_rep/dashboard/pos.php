@@ -1,6 +1,6 @@
 <?php
 // Include header
-include_once '../include/header.php';
+include_once '../include/head.php';
 ?>
 
 <!-- POS System -->

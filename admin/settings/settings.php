@@ -3,7 +3,7 @@
 $page_title = "Settings";
 
 // Include header
-include_once __DIR__ .'/../includes/header.php';
+include_once __DIR__ .'/../includes/head.php';
 
 // Get the active tab from query parameter (default to profile)
 $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'profile';

@@ -6,7 +6,7 @@ $page_title = "Products Management";
 ob_start();
 
 // Include header
-include_once '../includes/header.php';
+include_once '../includes/head.php';
 
 // Set default filter values
 $category = isset($_GET['category']) ? $_GET['category'] : '';

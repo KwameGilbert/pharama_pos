@@ -1,6 +1,6 @@
 <?php
 // Include header
-include_once '../include/header.php';
+include_once '../include/head.php';
 
 // Set default filter values
 $date_from = isset($_GET['date_from']) ? $_GET['date_from'] : date('Y-m-01'); // First day of current month

@@ -6,7 +6,7 @@ ob_start();
 $page_title = "Suppliers";
 
 // Include header
-include_once '../includes/header.php';
+include_once '../includes/head.php';
 
 // Delete supplier functionality
 if (isset($_GET['delete']) && !empty($_GET['delete'])) {

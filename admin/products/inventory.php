@@ -3,7 +3,7 @@
 $page_title = "Inventory Management";
 
 // Include header
-include_once '../includes/header.php';
+include_once '../includes/head.php';
 
 // Get filter parameters
 $category = isset($_GET['category']) ? $_GET['category'] : '';

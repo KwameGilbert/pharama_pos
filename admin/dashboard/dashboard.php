@@ -3,7 +3,7 @@
 $page_title = "Dashboard";
 
 // Include header
-include_once '../includes/header.php';
+include_once '../includes/head.php';
 
 // Get today's date and dates for various statistics
 $today = date('Y-m-d');

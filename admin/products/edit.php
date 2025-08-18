@@ -6,7 +6,7 @@ ob_start();
 $page_title = "Edit Product";
 
 // Include header
-include_once '../includes/header.php';
+include_once '../includes/head.php';
 
 // Check if product ID is provided
 if (!isset($_GET['id']) || empty($_GET['id'])) {

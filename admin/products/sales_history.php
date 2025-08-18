@@ -3,7 +3,7 @@
 $page_title = "Product Sales History";
 
 // Include header
-include_once '../includes/header.php';
+include_once '../includes/head.php';
 
 // Check if product ID is provided
 if (!isset($_GET['product_id']) || !is_numeric($_GET['product_id'])) {

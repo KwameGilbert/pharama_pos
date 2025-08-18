@@ -3,7 +3,7 @@
 $page_title = "Customers";
 
 // Include header
-include_once '../includes/header.php';
+include_once '../includes/head.php';
 
 // Delete customer functionality
 if (isset($_GET['delete']) && !empty($_GET['delete'])) {
