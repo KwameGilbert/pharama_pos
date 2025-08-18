@@ -52,7 +52,7 @@ $items_result = $items_stmt->get_result();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice #<?php echo $invoice['invoice_number']; ?></title>
+    <title>Invoice #<?php echo isset($invoice['invoice_id']) ? $invoice['invoice_id'] : '-'; ?></title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -154,7 +154,7 @@ $items_result = $items_stmt->get_result();
 </head>
 
 <body>
-    <?php if ($invoice['status'] == 'cancelled'): ?>
+    <?php if (($invoice['payment_status'] ?? '') == 'cancelled'): ?>
         <div class="status-cancelled">Cancelled</div>
     <?php endif; ?>
 
@@ -172,12 +172,12 @@ $items_result = $items_stmt->get_result();
                 </div>
                 <div class="col-md-6 text-md-end">
                     <h2>INVOICE</h2>
-                    <h3>#<?php echo $invoice['invoice_number']; ?></h3>
-                    <p class="mb-0"><strong>Date:</strong> <?php echo date('F d, Y', strtotime($invoice['invoice_date'])); ?></p>
-                    <p class="mb-0"><strong>Time:</strong> <?php echo date('h:i A', strtotime($invoice['created_at'])); ?></p>
-                    <?php if ($invoice['status'] == 'cancelled'): ?>
+                    <h3>#<?php echo isset($invoice['invoice_id']) ? $invoice['invoice_id'] : '-'; ?></h3>
+                    <p class="mb-0"><strong>Date:</strong> <?php echo isset($invoice['created_at']) ? date('F d, Y', strtotime($invoice['created_at'])) : '-'; ?></p>
+                    <p class="mb-0"><strong>Time:</strong> <?php echo isset($invoice['created_at']) ? date('h:i A', strtotime($invoice['created_at'])) : '-'; ?></p>
+                    <?php if (($invoice['payment_status'] ?? '') == 'cancelled'): ?>
                         <p class="mb-0 text-danger"><strong>CANCELLED</strong></p>
-                        <p class="mb-0 text-danger"><small>on <?php echo date('M d, Y h:i A', strtotime($invoice['updated_at'])); ?></small></p>
+                        <p class="mb-0 text-danger"><small>on <?php echo isset($invoice['updated_at']) ? date('M d, Y h:i A', strtotime($invoice['updated_at'])) : '-'; ?></small></p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -200,8 +200,8 @@ $items_result = $items_stmt->get_result();
                     <?php endif; ?>
                 </div>
                 <div class="col-md-6 text-md-end invoice-summary">
-                    <p class="mb-1"><strong>Payment Method:</strong> <?php echo ucfirst($invoice['payment_method']); ?></p>
-                    <p class="mb-1"><strong>Sales Rep:</strong> <?php echo htmlspecialchars($invoice['sales_rep_name']); ?></p>
+                    <p class="mb-1"><strong>Payment Method:</strong> <?php echo isset($invoice['payment_method']) ? ucfirst($invoice['payment_method']) : '-'; ?></p>
+                    <p class="mb-1"><strong>Sales Rep:</strong> <?php echo htmlspecialchars($invoice['sales_rep_name'] ?? '-'); ?></p>
                 </div>
             </div>
         </div>
@@ -224,7 +224,10 @@ $items_result = $items_stmt->get_result();
                     $subtotal = 0;
 
                     while ($item = $items_result->fetch_assoc()) {
-                        $itemTotal = $item['unit_price'] * $item['quantity'] - $item['discount'];
+                        $unit_price = $item['price'] ?? 0;
+                        $quantity = $item['quantity'] ?? 0;
+                        $discount = $item['discount'] ?? 0;
+                        $itemTotal = $unit_price * $quantity - $discount;
                         $subtotal += $itemTotal;
                     ?>
                         <tr>
@@ -233,9 +236,9 @@ $items_result = $items_stmt->get_result();
                                 <?php echo htmlspecialchars($item['name']); ?><br>
                                 <small class="text-muted"><?php echo htmlspecialchars($item['code']); ?></small>
                             </td>
-                            <td class="text-end"><?php echo number_format($item['unit_price'], 2); ?></td>
-                            <td class="text-center"><?php echo $item['quantity']; ?></td>
-                            <td class="text-end"><?php echo number_format($item['discount'], 2); ?></td>
+                            <td class="text-end"><?php echo number_format($unit_price, 2); ?></td>
+                            <td class="text-center"><?php echo $quantity; ?></td>
+                            <td class="text-end"><?php echo number_format($discount, 2); ?></td>
                             <td class="text-end"><?php echo number_format($itemTotal, 2); ?></td>
                         </tr>
                     <?php
@@ -251,42 +254,42 @@ $items_result = $items_stmt->get_result();
                     <tr>
                         <td colspan="4"></td>
                         <th class="text-end">Discount</th>
-                        <td class="text-end"><?php echo number_format($invoice['discount'], 2); ?></td>
+                        <td class="text-end"><?php echo number_format($invoice['discount'] ?? 0, 2); ?></td>
                     </tr>
                     <tr>
                         <td colspan="4"></td>
                         <th class="text-end">Tax</th>
-                        <td class="text-end"><?php echo number_format($invoice['tax'], 2); ?></td>
+                        <td class="text-end"><?php echo number_format($invoice['tax'] ?? 0, 2); ?></td>
                     </tr>
                     <tr class="total-row">
                         <td colspan="4"></td>
                         <th class="text-end">Total</th>
-                        <td class="text-end"><?php echo number_format($invoice['total_amount'], 2); ?></td>
+                        <td class="text-end"><?php echo number_format($invoice['total_amount'] ?? 0, 2); ?></td>
                     </tr>
-                    <?php if ($invoice['payment_method'] == 'cash'): ?>
+                    <?php if (($invoice['payment_method'] ?? '') == 'cash'): ?>
                         <tr>
                             <td colspan="4"></td>
                             <th class="text-end">Amount Paid</th>
-                            <td class="text-end"><?php echo number_format($invoice['amount_paid'], 2); ?></td>
+                            <td class="text-end"><?php echo number_format($invoice['amount_paid'] ?? 0, 2); ?></td>
                         </tr>
                         <tr>
                             <td colspan="4"></td>
                             <th class="text-end">Change</th>
-                            <td class="text-end"><?php echo number_format($invoice['amount_paid'] - $invoice['total_amount'], 2); ?></td>
+                            <td class="text-end"><?php echo number_format(($invoice['amount_paid'] ?? 0) - ($invoice['total_amount'] ?? 0), 2); ?></td>
                         </tr>
                     <?php endif; ?>
                 </tfoot>
             </table>
         </div>
 
-        <?php if (!empty($invoice['notes'])): ?>
+        <?php if (!empty($invoice['notes'] ?? '')): ?>
             <div class="mt-4">
                 <h6>Notes:</h6>
                 <p><?php echo nl2br(htmlspecialchars($invoice['notes'])); ?></p>
             </div>
         <?php endif; ?>
 
-        <?php if ($invoice['status'] == 'cancelled' && !empty($invoice['cancel_reason'])): ?>
+        <?php if (($invoice['payment_status'] ?? '') == 'cancelled' && !empty($invoice['cancel_reason'])): ?>
             <div class="mt-4 alert alert-danger">
                 <h6>Cancellation Reason:</h6>
                 <p><?php echo nl2br(htmlspecialchars($invoice['cancel_reason'])); ?></p>
