@@ -159,12 +159,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                 <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
                     <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="username" name="username" placeholder="Email Address" required>
+                        <input type="email" class="form-control" id="username" name="username" placeholder="Email Address" required value="dokens10@gmail.com">
                         <label for="username"><i class="fas fa-envelope me-2"></i>Email Address</label>
                     </div>
 
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required value="1234">
                         <label for="password"><i class="fas fa-lock me-2"></i>Password</label>
                     </div>
 

@@ -3,19 +3,13 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 18, 2025 at 01:26 PM
+-- Generation Time: Aug 19, 2025 at 02:39 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.4.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `pharma_pos`
@@ -29,7 +23,6 @@ USE `pharma_pos`;
 -- Table structure for table `audit_logs`
 --
 
-DROP TABLE IF EXISTS `audit_logs`;
 CREATE TABLE `audit_logs` (
   `log_id` int(11) NOT NULL,
   `user_id` int(11) DEFAULT NULL,
@@ -63,7 +56,8 @@ INSERT INTO `audit_logs` (`log_id`, `user_id`, `action`, `created_at`) VALUES
 (19, 1, 'User logged out', '2025-08-18 12:09:19'),
 (20, 2, 'Exported products in csv format', '2025-08-18 12:28:32'),
 (21, 2, 'Exported products in csv format', '2025-08-18 12:28:38'),
-(22, 2, 'Deleted product: Vitamin C (ID: 5)', '2025-08-18 12:41:13');
+(22, 2, 'Deleted product: Vitamin C (ID: 5)', '2025-08-18 12:41:13'),
+(23, 1, 'User logged in', '2025-08-19 12:54:56');
 
 -- --------------------------------------------------------
 
@@ -71,7 +65,6 @@ INSERT INTO `audit_logs` (`log_id`, `user_id`, `action`, `created_at`) VALUES
 -- Table structure for table `customers`
 --
 
-DROP TABLE IF EXISTS `customers`;
 CREATE TABLE `customers` (
   `customer_id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
@@ -86,7 +79,8 @@ CREATE TABLE `customers` (
 --
 
 INSERT INTO `customers` (`customer_id`, `name`, `phone`, `email`, `address`, `created_at`) VALUES
-(1, 'Gilbert Elikplim Kukah', '0541436414', 'kwamegilbert1114@gmail.com', 'CI-1785-2738, MZ/J 35. Gomoa Eshiem', '2025-08-17 15:23:07');
+(1, 'Lakpab David', '052564818653', 'lakpabalt@gmail.com', 'CI-1785-2738, MZ/J 35. Gomoa Eshiem', '2025-08-17 15:23:07'),
+(2, 'Kinsford Baffour Awuah', '5230100429', 'kingsfordbaffour999@gmail.com', 'Kumasi', '2025-08-19 14:06:13');
 
 -- --------------------------------------------------------
 
@@ -94,7 +88,6 @@ INSERT INTO `customers` (`customer_id`, `name`, `phone`, `email`, `address`, `cr
 -- Table structure for table `invoices`
 --
 
-DROP TABLE IF EXISTS `invoices`;
 CREATE TABLE `invoices` (
   `invoice_id` int(11) NOT NULL,
   `customer_id` int(11) DEFAULT NULL,
@@ -118,7 +111,6 @@ INSERT INTO `invoices` (`invoice_id`, `customer_id`, `user_id`, `total_amount`, 
 -- Table structure for table `invoice_items`
 --
 
-DROP TABLE IF EXISTS `invoice_items`;
 CREATE TABLE `invoice_items` (
   `invoice_item_id` int(11) NOT NULL,
   `invoice_id` int(11) NOT NULL,
@@ -142,7 +134,6 @@ INSERT INTO `invoice_items` (`invoice_item_id`, `invoice_id`, `product_id`, `qua
 -- Table structure for table `payments`
 --
 
-DROP TABLE IF EXISTS `payments`;
 CREATE TABLE `payments` (
   `payment_id` int(11) NOT NULL,
   `invoice_id` int(11) NOT NULL,
@@ -166,7 +157,6 @@ INSERT INTO `payments` (`payment_id`, `invoice_id`, `payment_method`, `amount`, 
 -- Table structure for table `pharmacy`
 --
 
-DROP TABLE IF EXISTS `pharmacy`;
 CREATE TABLE `pharmacy` (
   `pharmacy_id` int(11) NOT NULL,
   `name` varchar(150) NOT NULL,
@@ -176,13 +166,19 @@ CREATE TABLE `pharmacy` (
   `logo` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `pharmacy`
+--
+
+INSERT INTO `pharmacy` (`pharmacy_id`, `name`, `address`, `phone`, `email`, `logo`) VALUES
+(1, 'A & J Pharmaceuticals', 'Accra', '123516851', 'aj@gmail.com', NULL);
+
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `products`
 --
 
-DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
   `product_id` int(11) NOT NULL,
   `supplier_id` int(11) NOT NULL,
@@ -211,7 +207,6 @@ INSERT INTO `products` (`product_id`, `supplier_id`, `name`, `category`, `batch_
 -- Table structure for table `suppliers`
 --
 
-DROP TABLE IF EXISTS `suppliers`;
 CREATE TABLE `suppliers` (
   `supplier_id` int(11) NOT NULL,
   `name` varchar(150) NOT NULL,
@@ -227,8 +222,8 @@ CREATE TABLE `suppliers` (
 --
 
 INSERT INTO `suppliers` (`supplier_id`, `name`, `contact_person`, `phone`, `email`, `address`, `created_at`) VALUES
-(1, 'Donna Care Pharmacy', 'Gilbert Elikplim Kukah', '0541436414', 'kwamegilbert1114@gmail.com', 'CI-1785-2738, MZ/J 35.', '2025-08-17 17:28:21'),
-(2, 'Ernest Chemist', 'Kennedy', '02456786515', 'kenny@gmail.com', 'Tanoso, Kumasi', '2025-08-18 13:01:37');
+(1, 'Donna Care Pharmacy', 'Erica Agbezuge', '5230100423', 'ericadzidediabgezuge@gmail.com', 'CI-1785-2738, MZ/J 35.', '2025-08-17 17:28:21'),
+(2, 'Ernest Chemist', 'Bright Nyajapoan', '5230100427', 'nyajapoanb@gmail.com', 'Tanoso, Kumasi', '2025-08-18 13:01:37');
 
 -- --------------------------------------------------------
 
@@ -236,7 +231,6 @@ INSERT INTO `suppliers` (`supplier_id`, `name`, `contact_person`, `phone`, `emai
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `user_id` int(11) NOT NULL,
   `role` enum('sales_rep','manager') DEFAULT NULL,
@@ -253,8 +247,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `role`, `name`, `email`, `phone`, `password`, `status`, `created_at`) VALUES
-(1, 'sales_rep', 'Gilbert', 'kwamegilbert1114@gmail.com', '0541436414', '1234', 'active', '2025-08-17 14:41:30'),
-(2, 'manager', 'Micheal Ntim', 'ntimmicheal@gmaill.com', '+233277889900', '$2y$12$L4kxKOeJ61CeEoLdDRtCBeSwYExxYuxsE6SQFRANXvrChJ.LVFjSy', 'active', '2025-08-17 15:26:34');
+(1, 'sales_rep', 'Ahmed Amina', 'ahmed12amina23@gmail.com', '', '$2y$12$KA3U05AFR/3VxGVof.NcZe12OtDQ55h3Zedmu.6OF/KNljL9n1j0a', 'active', '2025-08-17 14:41:30'),
+(2, 'manager', 'Kenneth Amu Dodoo', 'dokens10@gmail.com', '+233277889900', '$2y$12$L4kxKOeJ61CeEoLdDRtCBeSwYExxYuxsE6SQFRANXvrChJ.LVFjSy', 'active', '2025-08-17 15:26:34');
 
 --
 -- Indexes for dumped tables
@@ -330,13 +324,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `invoices`
@@ -360,7 +354,7 @@ ALTER TABLE `payments`
 -- AUTO_INCREMENT for table `pharmacy`
 --
 ALTER TABLE `pharmacy`
-  MODIFY `pharmacy_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `pharmacy_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -416,7 +410,3 @@ ALTER TABLE `payments`
 ALTER TABLE `products`
   ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`supplier_id`);
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
