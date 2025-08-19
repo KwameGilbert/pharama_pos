@@ -54,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }    // Validate password
     if (empty($password)) {
         $errors[] = "Password is required.";
-    } elseif (strlen($password) < 8) {
-        $errors[] = "Password must be at least 8 characters long.";
+    } elseif (strlen($password) < 4) {
+        $errors[] = "Password must be at least 4 characters long.";
     } elseif ($password !== $confirm_password) {
         $errors[] = "Passwords do not match.";
     }

@@ -285,7 +285,7 @@ if ($last_month_total > 0) {
                         </table>
                     </div>
                     <div class="mt-3 text-center">
-                        <a href="../reports.php" class="btn btn-sm btn-outline-primary">View All Reports</a>
+                        <a href="../reports/reports.php" class="btn btn-sm btn-outline-primary">View All Reports</a>
                     </div>
                 </div>
             </div>

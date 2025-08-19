@@ -34,7 +34,8 @@ if (isset($_GET['delete']) && !empty($_GET['delete'])) {
 <div class="container-fluid px-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="mt-3">Customers Management</h3>
-        <a href="add.php" class="btn btn-primary">
+       
+        ass="btn btn-primary">
             <i class="fas fa-plus"></i> Add New Customer
         </a>
     </div>
@@ -170,7 +171,7 @@ if (isset($_GET['delete']) && !empty($_GET['delete'])) {
 
 <script>
     // Initialize DataTables
-    $(document).ready(function() {
+   document.addEventListener("DOMContentLoaded", function() {
         $('#datatablesSimple').DataTable({
             responsive: true
         });

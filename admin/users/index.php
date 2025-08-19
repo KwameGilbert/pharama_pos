@@ -266,7 +266,7 @@ $result = $stmt->get_result();
 </div>
 
 <script>
-    $(document).ready(function() {
+   document.addEventListener("DOMContentLoaded", function() {
         // Initialize DataTable
         $('#usersTable').DataTable({
             "responsive": true,

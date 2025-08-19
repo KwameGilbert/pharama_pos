@@ -1,8 +1,11 @@
 <?php
 // Start the session for user authentication
-if (!session_id()) {
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+ob_start();
+
+
 
 // Check if user is logged in as admin
 if (!isset($_SESSION['admin_id']) || $_SESSION['role'] !== 'admin') {
@@ -42,6 +45,8 @@ $pharmacy = mysqli_fetch_assoc($pharmacy_result);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/dataTables.bootstrap5.min.css">
+
+ 
     <!-- Custom styles -->
     <style>
         :root {
